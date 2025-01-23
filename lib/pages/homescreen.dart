@@ -105,7 +105,7 @@ class _HomescreenState extends State<Homescreen> {
             
             trailing: IconButton(onPressed: ()=> _deleteItems(food), icon: Icon(Icons.delete),color: Colors.red
             ,),
-            onTap: () => _showDialog(),
+            onTap: () => _showDialog(food:food),
             ),
             
           );

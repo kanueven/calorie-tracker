@@ -37,22 +37,35 @@ class _HomescreenState extends State<Homescreen> {
 
   }
   //update food item
+  void _updateItems(FoodItem food,String newName,int newCalories)async{
+    food.calories = newCalories;
+    food.name = newName;
+    objectBox.foodBox.put(food);
+    _loadItems();
+
+  }
 
   //delete food item
-//   void _deleteItems(FoodItem food) async {
-//   if (food.id != 0) { // Check for a valid ID
-//     objectBox.foodBox.remove(food.id);
-//     _loadItems();
-//   } else {
-//     print("Invalid food ID: ${food.id}");
-//   }
-// }
+  void _deleteItems(FoodItem food) async {
+  if (food.id != 0) { // Check for a valid ID
+    objectBox.foodBox.remove(food.id);
+    print('deleted fooditem');
+    _loadItems();
+  } else {
+    print("Invalid food ID: ${food.id}");
+  }
+}
   
   //method to call dialogbox
-  void _showDialog(){
+  void _showDialog({FoodItem ?food}){
 
     final nameController = TextEditingController();
     final caloriesController = TextEditingController();
+
+    if (food != null) {
+      nameController.text = food.name;
+      caloriesController.text = food.calories.toString();
+    }
 
     showDialog(
       context: context,
@@ -64,7 +77,11 @@ class _HomescreenState extends State<Homescreen> {
             final name = nameController.text;
             final calories = int.tryParse(caloriesController.text) ?? 0;
             if (name.isNotEmpty && calories > 0) {
-              _addFoodItems(name, calories);
+             if (food!= null){
+              _updateItems(food, name, calories);
+             }else{
+               _addFoodItems(name, calories);
+             }
             }
           },
         );
@@ -75,7 +92,9 @@ class _HomescreenState extends State<Homescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
+      body: fooditems.isEmpty 
+      ? Center(child: Text('No items found'),)
+     : ListView.builder(
         itemCount: fooditems.length,
         itemBuilder: (context,index){
           final food = fooditems[index];
@@ -84,16 +103,11 @@ class _HomescreenState extends State<Homescreen> {
             title: Text(food.name),
             subtitle: Text('${food.calories} calories'),
             
-            trailing: Row(
-              children: [
-                IconButton(onPressed: ()=>
-               {} , 
-                icon: Icon(Icons.delete),color: Colors.red,)
-
-            ],
+            trailing: IconButton(onPressed: ()=> _deleteItems(food), icon: Icon(Icons.delete),color: Colors.red
+            ,),
+            onTap: () => _showDialog(),
             ),
             
-            )
           );
           
         },),

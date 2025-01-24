@@ -4,18 +4,20 @@ class DialogBox extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController caloriesController;
   final VoidCallback onAdd;
+  final bool isEditing;
 
   const DialogBox({
     super.key,
     required this.nameController,
     required this.caloriesController,
     required this.onAdd,
+     this.isEditing = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Add Food Item'),
+      title:  Text(isEditing? 'Edit Food Item':'Add Food Item'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -52,7 +54,7 @@ class DialogBox extends StatelessWidget {
               );
             }
           },
-          child: const Text('Add'),
+          child:  Text(isEditing ? 'Edit' : 'Add'),
         ),
       ],
     );

@@ -15,17 +15,30 @@ class _HomescreenState extends State<Homescreen> {
   //fetch fooditems from list
   List<FoodItem> fooditems = [];
 
+  //fetch filtered items
+  List<FoodItem> filteredItems = [];
+
+
+  final TextEditingController searchController = TextEditingController();
+
   @override
   void initState(){
     super.initState();
+    searchController.addListener(_filteredItems);
     _loadItems();
 
+  }
+  @override
+  void dispose(){
+    searchController.dispose();
+    super.dispose();
   }
   //load items from the db
   void _loadItems() async{
     final items = objectBox.foodBox.getAll();
     setState(() {
       fooditems = items;
+      filteredItems = items;
     });
   }
   //add items 
@@ -33,7 +46,10 @@ class _HomescreenState extends State<Homescreen> {
     final newFoodItem = FoodItem(calories: calories, name: name);
     objectBox.foodBox.put(newFoodItem);
   
-    _loadItems();
+    setState(() {
+      fooditems.insert( 0, newFoodItem);
+        filteredItems  = fooditems;
+    });
 
   }
   //update food item
@@ -44,6 +60,16 @@ class _HomescreenState extends State<Homescreen> {
     _loadItems();
 
   }
+  //query,search filter
+  void _filteredItems(){
+    final query = searchController.text.toLowerCase();
+    setState(() {
+      filteredItems = fooditems.where((item) => item.name.toLowerCase().contains(query))
+          .toList();
+    });
+
+  }
+
 
   //delete food item
   void _deleteItems(FoodItem food) async {
@@ -73,6 +99,7 @@ class _HomescreenState extends State<Homescreen> {
         return DialogBox(
           nameController: nameController,
           caloriesController: caloriesController,
+          isEditing: food != null,
           onAdd: () {
             final name = nameController.text;
             final calories = int.tryParse(caloriesController.text) ?? 0;
@@ -92,12 +119,23 @@ class _HomescreenState extends State<Homescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: fooditems.isEmpty 
+      appBar:AppBar(
+        title: TextField(        
+      controller: searchController,          
+          decoration: InputDecoration(                                
+            hintText: 'Search...',
+            prefixIcon: const Icon(Icons.search),  
+            border:InputBorder.none,
+          ),
+          style: TextStyle(color: Colors.black),
+        ),
+      ) ,
+      body: filteredItems.isEmpty 
       ? Center(child: Text('No items found'),)
      : ListView.builder(
-        itemCount: fooditems.length,
+        itemCount: filteredItems.length,
         itemBuilder: (context,index){
-          final food = fooditems[index];
+          final food = filteredItems[index];
           return Card(
             child: ListTile(
             title: Text(food.name),

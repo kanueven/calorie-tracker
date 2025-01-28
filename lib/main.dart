@@ -1,14 +1,21 @@
+import 'package:calorie/auth/login_or_register.dart';
 import 'package:calorie/data/objectbox.dart';
+import 'package:calorie/provider/auth_state.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'pages/homescreen.dart';
+
 
 late ObjectBox objectBox;
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   objectBox = await ObjectBox.create(); // Initialize ObjectBox
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(create: (context) => AuthState(),
+  child:const MyApp()
+  ,)
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Homescreen(),
+      home: const LoginOrRegister(),
     );
   }
 }

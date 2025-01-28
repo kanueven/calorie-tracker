@@ -37,6 +37,7 @@ dependencies:
   objectbox: ^4.0.3
   objectbox_flutter_libs: any
   shared_preferences: ^2.3.5
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:

@@ -12,7 +12,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   objectBox = await ObjectBox.create(); // Initialize ObjectBox
-  runApp(ChangeNotifierProvider(create: (context) => AuthState(),
+  runApp(ChangeNotifierProvider(create: (context) => AuthState(objectBox),
   child:const MyApp()
   ,)
   );

@@ -2,7 +2,7 @@ import 'package:calorie/main.dart';
 import 'package:calorie/model/food_item.dart';
 import 'package:calorie/widgets/dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:objectbox/objectbox.dart';
+
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});

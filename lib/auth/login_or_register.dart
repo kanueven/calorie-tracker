@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 
 class LoginOrRegister extends StatefulWidget {
   const LoginOrRegister({super.key});
+  //add user
+  // void addUser(String username,String password){
+  //   final user = User()
+
+  // }
 
   @override
   State<LoginOrRegister> createState() => _LoginOrRegisterState();

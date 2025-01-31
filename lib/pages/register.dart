@@ -1,6 +1,10 @@
 import 'package:calorie/components/my_button.dart';
 import 'package:calorie/components/my_textfield.dart';
+import 'package:calorie/pages/homescreen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/auth_state.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()?  onTap;
@@ -68,9 +72,22 @@ class _RegisterPageState extends State<RegisterPage> {
               // Sign in button
               MyButton(
                 onTap: () {
-                  // Implement your sign-in logic here
-                  print("Username: ${usernameController.text}");
-                  print("Password: ${passwordController.text}");
+                  //interact with authstate to actually register
+                  final authState = Provider.of<AuthState>(context, listen: false);
+                  //set user credentials
+                  authState.setUsername(usernameController.text);
+                  authState.setPassword(passwordController.text);
+                  authState.setConfirmPassword(confirmPasswordController.text);
+                  //call register function
+                  authState.register();
+                 
+                   
+                    // Navigate to HomeScreen on successful registration
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Homescreen()),
+                    );
+                
                 },
                 text: 'Sign Up',
               ),
